@@ -110,11 +110,22 @@ func goPkg(fname string) (string, error) {
 	return pkgName, nil
 }
 
+var (
+	WELL_KNOWN_M_IMPORTS = []string{
+		"Mgoogle/protobuf/any.proto=github.com/gogo/protobuf/types",
+		"Mgoogle/protobuf/duration.proto=github.com/gogo/protobuf/types",
+		"Mgoogle/protobuf/empty.proto=github.com/gogo/protobuf/types",
+		"Mgoogle/protobuf/struct.proto=github.com/gogo/protobuf/types",
+		"Mgoogle/protobuf/timestamp.proto=github.com/gogo/protobuf/types",
+		"Mgoogle/protobuf/wrappers.proto=github.com/gogo/protobuf/types",
+	}
+)
+
 // protoc executes the "protoc" command on files named in fnames,
 // passing go_out and include flags specified in goOut and includes respectively.
 // protoc returns combined output from stdout and stderr.
 func protoc(goOut string, includes, fnames []string) ([]byte, error) {
-	args := []string{"--go_out=plugins=grpc:" + goOut}
+	args := []string{fmt.Sprintf("--gogofast_out=plugins=grpc,%s:%s", strings.Join(WELL_KNOWN_M_IMPORTS, ","), goOut)}
 	for _, inc := range includes {
 		args = append(args, "-I", inc)
 	}

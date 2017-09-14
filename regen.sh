@@ -66,9 +66,11 @@ fi
 wait
 
 # Nuke everything, we'll generate them back
-rm -r googleapis/ protobuf/
+rm -rf googleapis/ protobuf/
 
 go run regen.go -go_out "$root/src" -pkg_prefix "$PKG" "$apidir" "$protodir"
+
+find "$root/src"
 
 # Sanity check the build.
 echo 1>&2 "Checking that the libraries build..."
